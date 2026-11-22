@@ -1,9 +1,9 @@
 [Desktop Entry]
 Type=Application
 Name=Zellij
-Comment=Reopen the canonical Zellij session with resurrected agents
+Comment=Manage Your Terminal Applications
 Exec=__LAUNCHER__
-Icon=utilities-terminal
+Icon=dev.zellij.Zellij
 Terminal=false
 Categories=System;TerminalEmulator;
 StartupNotify=false

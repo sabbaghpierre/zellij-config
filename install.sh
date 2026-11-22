@@ -173,10 +173,10 @@ mkdir -p "$HOME/.local/bin"
 link "$here/launcher/zellij-work" "$HOME/.local/bin/zellij-work"
 if [ -d "$HOME/.local/share/applications" ] || [ "$os" != Darwin ]; then
   mkdir -p "$HOME/.local/share/applications"
-  # Remove the old entry so there aren't two menu items.
-  olddesktop="$HOME/.local/share/applications/zellij-work.desktop"
-  [ -f "$olddesktop" ] && rm -f "$olddesktop"
-  desktop="$HOME/.local/share/applications/zellij.desktop"
+  # Match the package launcher ID and drop older entries so there is one icon.
+  rm -f "$HOME/.local/share/applications/zellij-work.desktop" \
+        "$HOME/.local/share/applications/zellij.desktop"
+  desktop="$HOME/.local/share/applications/dev.zellij.Zellij.desktop"
   sed "s|__LAUNCHER__|$HOME/.local/bin/zellij-work|" "$here/launcher/zellij.desktop" > "$desktop"
   chmod 644 "$desktop"
   command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database "$HOME/.local/share/applications" >/dev/null 2>&1 || true
