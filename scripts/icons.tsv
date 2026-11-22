@@ -1,0 +1,32 @@
+# name<TAB>glyph<TAB>label
+# Resolved by tab-icon.sh against a normalized command name. Add a row to
+# override any command; everything else falls back to a generic terminal glyph.
+# Glyphs are Nerd Font codepoints present in Hack Nerd Font.
+claude		claude
+opencode	OC	opencode
+lazygit		lazygit
+git		git
+fdemon		fdemon
+flutter		flutter
+nvim		nvim
+vim		vim
+node		node
+npm		npm
+pnpm		pnpm
+yarn		yarn
+bun		bun
+gitui		gitui
+lazygit		lazygit
+htop		htop
+top		top
+docker		docker
+kubectl		kube
+python		python
+python3		python
+sqlite3		sqlite
+redis-cli		redis
+shell		shell
+zsh		shell
+bash		shell
+fish		shell
+sh		shell

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Zellij
+Comment=Reopen the canonical Zellij session with resurrected agents
+Exec=__LAUNCHER__
+Icon=utilities-terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+StartupNotify=false

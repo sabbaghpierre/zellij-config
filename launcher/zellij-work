@@ -1,0 +1,16 @@
+#!/bin/sh
+# Desktop launcher: reopen the canonical Zellij session with resurrected
+# commands running immediately. Override the session with ZELLIJ_WORK_SESSION.
+# exec keeps one dock icon; --standalone avoids handing off to a shared desktop
+# app that drops the session name.
+case $(uname -s) in
+  Darwin) extra=${ZELLIJ_WORK_PATH:-"$HOME/flutter/bin"} ;;
+  *)      extra=${ZELLIJ_WORK_PATH:-} ;;
+esac
+export PATH="$extra${extra:+:}$HOME/.local/bin:$HOME/.cargo/bin:$PATH:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+cd "$HOME" || exit 1
+session=${ZELLIJ_WORK_SESSION:-work}
+# Auto-name tabs left with default labels (direct run panes, app TUIs).
+watcher="${XDG_CONFIG_HOME:-$HOME/.config}/zellij/scripts/tab-watcher.sh"
+[ -x "$watcher" ] && ZELLIJ_WORK_SESSION="$session" "$watcher" >/dev/null 2>&1 &
+exec zellij terminal "$session" --create -f --standalone --working-directory "$HOME"
