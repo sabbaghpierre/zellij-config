@@ -9,6 +9,10 @@ here=$(cd "$(dirname "$0")" && pwd)
 os=$(uname -s)
 zcfg="${XDG_CONFIG_HOME:-$HOME/.config}/zellij"
 ocfg="${XDG_CONFIG_HOME:-$HOME/.config}/opencode"
+case $os in
+  Darwin) font_size=${ZELLIJ_FONT_SIZE:-$FONT_SIZE_MACOS} ;;
+  *)      font_size=${ZELLIJ_FONT_SIZE:-$FONT_SIZE_LINUX} ;;
+esac
 backup() { # backup <path> — only for real files/dirs, never symlinks
   [ -e "$1" ] || return 0
   if [ -L "$1" ]; then
@@ -27,6 +31,27 @@ link() { # link <source> <dest>
   mkdir -p "$(dirname "$2")"
   ln -sfn "$1" "$2"
   echo "linked $2 -> $1"
+}
+render_config() { # render_config <template> <dest> — real file with per-OS values
+  tmp=$(mktemp "${TMPDIR:-/tmp}/zellij-config.XXXXXX")
+  sed -e "s|@FONT_NAME@|$FONT_NAME|g" -e "s|@FONT_SIZE@|$font_size|g" "$1" > "$tmp"
+  if [ -e "$2" ] || [ -L "$2" ]; then
+    if cmp -s "$tmp" "$2"; then
+      rm -f "$tmp"
+      return 0
+    fi
+    if [ -L "$2" ]; then
+      case $(readlink "$2") in
+        "$here"/*|"$here") rm -f "$2" ;;
+        *) backup "$2" ;;
+      esac
+    else
+      backup "$2"
+    fi
+  fi
+  cp "$tmp" "$2"
+  echo "rendered $2 (font $FONT_NAME, size $font_size)"
+  rm -f "$tmp"
 }
 need() { command -v "$1" >/dev/null 2>&1 || fail "missing '$1'"; }
 fail() { echo "error: $*" >&2; exit 1; }
@@ -72,7 +97,7 @@ fi
 
 echo "== config =="
 mkdir -p "$zcfg"
-link "$here/config.kdl" "$zcfg/config.kdl"
+render_config "$here/config.kdl" "$zcfg/config.kdl"
 for s in "$here"/scripts/*; do
   [ -f "$s" ] || continue
   case $(basename "$s") in icons.tsv) ;; *) chmod +x "$s" ;; esac
@@ -197,4 +222,5 @@ if ZELLIJ_CONFIG_FILE="$zcfg/config.kdl" zellij setup --check >/dev/null 2>&1; t
 echo
 echo "done. Launch with: $HOME/.local/bin/zellij-work"
 echo "session name: work (override with ZELLIJ_WORK_SESSION)"
+echo "font: $FONT_NAME at $font_size (override with ZELLIJ_FONT_SIZE when installing)"
 echo "tip: press Ctrl g to lock/unlock Zellij when inside nvim so Alt keys reach it"

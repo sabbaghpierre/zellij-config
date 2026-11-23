@@ -1,4 +1,5 @@
-// Zellij config — snapshot-restoring terminal setup (macOS + Linux).
+// Zellij config template — rendered by install.sh into the Zellij config dir.
+// Font name and size placeholders are substituted from versions.sh (per-OS size).
 // Active settings only; see the repo install.sh for setup and tool checks.
 // Keybinds: Super = Cmd on macOS / Win on Linux. Ctrl q / Super q detach
 // (the save path); Super w confirms before closing a tab with a live command.
@@ -319,8 +320,8 @@ web_client {
     font "monospace"
 }
 terminal {
-    font "Hack Nerd Font"
-    font_size 12
+    font "@FONT_NAME@"
+    font_size @FONT_SIZE@
     padding 12
     padding_top 12
     padding_right 12
